@@ -1,0 +1,21 @@
+/* .main-header {
+    height: 160px;
+} */
+
+.main-header .logo {
+    font-family: inconsolata, monospace;
+    font-size: 2.14285714em;
+    color: var(--clr2);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+.main-header .header-nav a {
+    text-transform: uppercase;
+    color: inherit;
+    text-decoration: none;
+}
+
+.main-header .header-nav a:hover {
+    color: var(--clr2);
+}

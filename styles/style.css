@@ -1,0 +1,21 @@
+/* SETUP  */
+
+@import 'setup/vars.css';
+@import 'setup/typography.css';
+
+/* BASE */
+
+@import 'basic/base.css';
+@import 'basic/layout.css';
+@import 'basic/helpers.css';
+@import 'basic/mq.css';
+
+/* COMPONENTS */
+
+@import 'components/static/main-header.css';
+@import 'components/screen.css';
+@import 'components/section-select-image/card.css';
+@import 'components/section-edit-image/canvas.css';
+@import 'components/section-edit-image/tools.css';
+@import 'components/section-select-image/select-image-filters.css';
+@import 'components/static/footer.css';

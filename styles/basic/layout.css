@@ -1,0 +1,9 @@
+.main-layout {
+    margin: 0 auto;
+    margin-right: 1.6rem;
+    margin-left: 1.6rem;
+}
+
+.card-layout>* {
+    margin-bottom: 60px;
+}

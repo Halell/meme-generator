@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meme generator</title>
+    <link rel="stylesheet" href="styles/style.css" />
+</head>
+
+<body onload="onInit()">
+
+    <div class="main-screen" onclick="toggleMenu()"></div>
+
+    <!-- static header -->
+
+    <header class="main-header main-layout flex space-between align-center">
+        <div class="logo">meme-generator</div>
+        <nav class="header-nav-container">
+            <ul class="header-nav clean-list flex">
+                <li><a href="#">Gallery</a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+            <button class="btn-menu" onclick="toggleMenu()">☰</button>
+        </nav>
+    </header>
+
+    <!--- section images selection -->
+    <section class="select-image main-layout">
+
+        <!-- filters bar -->
+        <div class="select-image-filters-container flex space-between align-center">
+
+            <input type="text" placeholder="Enter search keyword">
+            <ul class="select-image-filter-by-word clean-list flex space-between align-center ">
+                <li><a href="#">Word</a></li>
+                <li><a href="#">Word</a></li>
+                <li><a href="#">Word</a></li>
+                <li><a href="#">Word</a></li>
+            </ul>
+            <button class="btn-more">← more</button>
+
+        </div>
+
+        <!-- image Gallery -->
+        <main>
+            <div class="images-gallery-container grid">
+                <div class="card" data-name="1.jpg" onclick="onImageClick(this.dataset.name)">
+                    <img src="img/meme-imgs (square)/1.jpg" alt="" class="card-image" data-name="1.jpg" />
+                </div>
+                <div class="card">
+                    <img src="img/meme-imgs (square)/2.jpg" alt="" class="card-image" data-name="1.jpg" />
+                </div>
+                <div class="card">
+                    <img src="img/meme-imgs (square)/3.jpg" alt="" class="card-image" />
+                </div>
+                <div class="card">
+                    <img src="img/meme-imgs (square)/4.jpg" alt="" class="card-image" />
+                </div>
+                <div class="card">
+                    <img src="img/meme-imgs (square)/5.jpg" alt="" class="card-image" />
+                </div>
+            </div>
+        </main>
+
+    </section>
+
+    <!--- section edit meme imag -->
+    <section class="edit-image main-layout ">
+        <main>
+            <div class="edit-image-container flex justify-center">
+                <!-- canvas -->
+                <div class="canvas-container">
+                    <canvas width="500" height="500" style="border: 2px solid rgb(0, 0, 0);"></canvas>
+                </div>
+                <!-- tools -->
+                <div class="tools">
+                    <input type="text" oninput="onTextChange(this.value)">
+                    <button onclick="onClearText()"> Clear-tex</button>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <footer class="main-footer dark-bg ">
+        <section class="main-footer-container main-layout">
+            <small>all rights reserved 2019</small>
+        </section>
+    </footer>
+
+    <script src="./js/meme.storege.js"></script>
+    <script src="./js/meme.controller.js"></script>
+    <script src="./js/meme.service.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,36 @@
+.select-image-filters-container {
+    height: 160px;
+}
+
+.select-image-filters-container input {
+    font-family: inconsolata, monospace;
+    font-size: 2.14285714em;
+    color: var(--clr2);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+.select-image-filters-container .select-image-filter-by-word {
+    width: 400px;
+}
+
+.select-image-filters-container .select-image-filter-by-word a {
+    text-transform: uppercase;
+    color: inherit;
+    text-decoration: none;
+}
+
+.select-image-filters-container .select-image-filter-by-word a:hover {
+    color: var(--clr2);
+}
+
+.select-image-filters-container button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: inherit;
+    font-size: 1.14285714em;
+    color: var(--clr2);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}

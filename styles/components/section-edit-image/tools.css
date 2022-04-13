@@ -1,0 +1,6 @@
+.tools {
+    flex-grow: 1;
+    height: auto;
+    outline: 7px solid green;
+    margin: 7px;
+}
