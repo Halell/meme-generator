@@ -1,5 +1,5 @@
 'use strict'
-console.log('controller is up')
+
 var gImages = [
     {
         id: 1,
@@ -28,10 +28,45 @@ var gImages = [
         category: 'funny'
     },
 ]
-var gStartPos
+
+var gMeme = {
+    text: {
+        strings: ['', ''],
+        textInFocus: 0,
+        positionDividers: [0.1, 0.8]
+    },
+}
+
+// var gStartPos
 
 
-function getSelectedImg(id) {
-    const imagIdx = gImages.findIndex(item => item.name === 'John')
-    return gImages[imagIdx].imgSrc
+function switchFocus() {
+    gMeme.text.textInFocus = (!gMeme.text.textInFocus) ? 1 : 0
+    var textInFocus = gMeme.text.strings[gMeme.text.textInFocus]
+    gMeme.text.strings[gMeme.text.textInFocus] = ''
+    return { textInFocus, cuurFocusPos: gMeme.text.textInFocus }
+}
+
+function saveCuurText(str) {
+    gMeme.text.strings[gMeme.text.textInFocus] = str
+}
+function getCuurFocus() {
+    return gMeme.text.positionDividers[gMeme.text.textInFocus]
+}
+
+function getSavedTxt() {
+    return gMeme.text.strings.map((str, idx) => {
+        return [str, gMeme.text.positionDividers[idx]]
+    })
+}
+function updateGmeme(val) {
+    gMeme.text.strings[gMeme.text.textInFocus] = val
+}
+
+function getCuurTxtPos() {
+    return gMeme.text.positionDividers[gMeme.text.textInFocus]
+}
+
+function getGimages() {
+    return gImages
 }
