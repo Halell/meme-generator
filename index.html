@@ -32,7 +32,7 @@
         <!-- filters bar -->
         <div class="select-image-filters-container flex space-between align-center">
 
-            <input type="text" placeholder="Enter search keyword">
+            <input type="text" name="search-text" placeholder="Search keyword">
             <ul class="select-image-filter-by-word clean-list flex space-between align-center ">
                 <li><a href="#">Word</a></li>
                 <li><a href="#">Word</a></li>
@@ -46,21 +46,8 @@
         <!-- image Gallery -->
         <main>
             <div class="images-gallery-container grid">
-                <div class="card" data-name="1.jpg" onclick="onImageClick(this.dataset.name)">
-                    <img src="img/meme-imgs (square)/1.jpg" alt="" class="card-image" data-name="1.jpg" />
-                </div>
-                <div class="card">
-                    <img src="img/meme-imgs (square)/2.jpg" alt="" class="card-image" data-name="1.jpg" />
-                </div>
-                <div class="card">
-                    <img src="img/meme-imgs (square)/3.jpg" alt="" class="card-image" />
-                </div>
-                <div class="card">
-                    <img src="img/meme-imgs (square)/4.jpg" alt="" class="card-image" />
-                </div>
-                <div class="card">
-                    <img src="img/meme-imgs (square)/5.jpg" alt="" class="card-image" />
-                </div>
+                <!-- images gos here -->
+            </div>
             </div>
         </main>
 
@@ -76,8 +63,10 @@
                 </div>
                 <!-- tools -->
                 <div class="tools">
-                    <input type="text" oninput="onTextChange(this.value)">
-                    <button onclick="onClearText()"> Clear-tex</button>
+                    <input type="text" name="meme-text" oninput="onTextChange(this.value)" onfocus="onTxtFocus()"
+                        onblur="onTxtOutFocus()">
+                    <button onclick="onClearText(true)"> Clear-tex</button>
+                    <button onclick="onSwitchText()"> Switch</button>
                 </div>
             </div>
         </main>
@@ -90,8 +79,8 @@
     </footer>
 
     <script src="./js/meme.storege.js"></script>
-    <script src="./js/meme.controller.js"></script>
     <script src="./js/meme.service.js"></script>
+    <script src="./js/meme.controller.js"></script>
 
 </body>
 
