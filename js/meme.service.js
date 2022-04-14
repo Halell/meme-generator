@@ -29,14 +29,16 @@ var gImages = [
     },
 ]
 
+var gModel = []
+
 var gMeme = {
     text: {
-        strings: ['', ''],
         textInFocus: 0,
-        positionDividers: [0.1, 0.8]
+        strings: ['', ''],
+        positionHightDividers: [0.1, 0.8],
+        textAligns: ['', '']
     },
 }
-
 // var gStartPos
 
 
@@ -47,8 +49,9 @@ function switchFocus() {
     return { textInFocus, cuurFocusPos: gMeme.text.textInFocus }
 }
 
-function saveCuurText(str) {
+function saveCuurText(str, appState) {
     gMeme.text.strings[gMeme.text.textInFocus] = str
+    gMeme.text.textAligns[gMeme.text.textInFocus] = appState.textAligns
 }
 function getCuurFocus() {
     return gMeme.text.positionDividers[gMeme.text.textInFocus]
@@ -56,11 +59,8 @@ function getCuurFocus() {
 
 function getSavedTxt() {
     return gMeme.text.strings.map((str, idx) => {
-        return [str, gMeme.text.positionDividers[idx]]
+        return [str, gMeme.text.positionHightDividers[idx]]
     })
-}
-function updateGmeme(val) {
-    gMeme.text.strings[gMeme.text.textInFocus] = val
 }
 
 function getCuurTxtPos() {
@@ -69,4 +69,20 @@ function getCuurTxtPos() {
 
 function getGimages() {
     return gImages
+}
+
+
+function getTxtsWidth(ctx) {
+    return gMeme.text.strings.map(str => {
+        return Math.ceil(ctx.measureText(str))
+    })
+}
+
+function setNewCanvasObj(name, method, body, pos) {
+    gModel.push({
+        name,
+        method,
+        body,
+        pos,
+    })
 }
