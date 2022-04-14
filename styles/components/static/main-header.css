@@ -16,6 +16,12 @@
     text-decoration: none;
 }
 
+
+.main-header .header-nav>li:nth-child(1) {
+    font-size: 18px;
+    font-weight: 600;
+}
+
 .main-header .header-nav a:hover {
     color: var(--clr2);
 }

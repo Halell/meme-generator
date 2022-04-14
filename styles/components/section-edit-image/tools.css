@@ -4,3 +4,42 @@
     outline: 7px solid green;
     margin: 7px;
 }
+
+
+.btn-copy-url {
+    position: relative;
+    display: inline-block;
+}
+
+.btn-copy-url .btn-copy-url-tooltiptext {
+    visibility: hidden;
+    width: 140px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -75px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.btn-copy-url .btn-copy-url-tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.btn-copy-url:hover .btn-copy-url-tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}

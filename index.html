@@ -19,7 +19,7 @@
         <div class="logo">meme-generator</div>
         <nav class="header-nav-container">
             <ul class="header-nav clean-list flex">
-                <li><a href="#">Gallery</a></li>
+                <li><a href="#" onclick="onGalleryClick()">Gallery</a></li>
                 <li><a href="#">About</a></li>
             </ul>
             <button class="btn-menu" onclick="toggleMenu()">☰</button>
@@ -54,7 +54,7 @@
     </section>
 
     <!--- section edit meme imag -->
-    <section class="edit-image main-layout ">
+    <section class="edit-image main-layout " style='display: none;'>
         <main>
             <div class="edit-image-container flex justify-center">
                 <!-- canvas -->
@@ -66,7 +66,25 @@
                     <input type="text" name="meme-text" oninput="onTextChange(this.value)" onfocus="onTxtFocus()"
                         onblur="onTxtOutFocus()">
                     <button onclick="onClearText(true)"> Clear-tex</button>
-                    <button onclick="onSwitchText()"> Switch</button>
+                    <button class="btn-text-switch" onclick="onSwitchText()"> Switch</button>
+                    <!-- <button class="btn-share"><a href="#" onclick="onShareLink()">Copy link</a></button> -->
+                    <button class="btn-download"><a href=" #" onclick="onDownload(this)"
+                            download="">Download</a></button>
+                    <div class="btn-copy-url">
+                        <button onclick="onShareLink()" onmouseout="outFunc()">
+                            <span class="btn-copy-url-tooltiptext">Copy to clipboard</span>
+                            Copy URL
+                        </button>
+                    </div>
+                    <!-- <ul class="btn-share-link clean-list">
+                        <li>
+                            <a href="#">Share</a>
+                            <ul class="clean-list">
+                                <li><a href="#" onclick="onShareLink()">Copy link</a></li>
+                                <li><a href=" #" onclick="onDownload(this)" download="eldar.jpg">Download</a></li>
+                            </ul>
+                        </li>
+                    </ul> -->
                 </div>
             </div>
         </main>

@@ -34,13 +34,81 @@ function renderPics() {
     document.querySelector('.images-gallery-container').innerHTML = strHtml
 
 }
-
+// name
 function onImageClick(id) {
+    renderEditDisplay()
     var images = Array.from(document.images)
     var img = images[images.findIndex(item => item.dataset.name === id)]
     gAppState.selectedImgId = img
     drawImgOnCanvas(img)
 }
+
+function onGalleryClick() {
+    document.querySelector('.images-gallery-container').style.display = 'grid'
+    document.querySelector('.edit-image').style.display = 'none'
+
+}
+
+function renderEditDisplay() {
+    document.querySelector('.edit-image').style.display = 'block'
+    document.querySelector('.images-gallery-container').style.display = 'none'
+    resizeCanvas()
+}
+
+
+function onDownload(elLink) {
+    const data = gElCanvas.toDataURL()
+    elLink.href = data
+    elLink.download = 'water.jpg'
+
+}
+
+
+
+
+
+// --------------------------Copy to  clip board-------------------
+
+function onShareLink() {
+    const imgDataUrl = gElCanvas.toDataURL("image/jpeg")
+
+    function onSuccess(uploadedImgUrl) {
+        navigator.clipboard.writeText(uploadedImgUrl)
+        var tooltip = document.querySelector(".btn-copy-url-tooltiptext")
+        tooltip.innerHTML = "Copied: "
+    }
+    doUploadImg(imgDataUrl, onSuccess)
+}
+
+function doUploadImg(imgDataUrl, onSuccess) {
+
+    const formData = new FormData()
+    formData.append('img', imgDataUrl)
+
+    fetch('//ca-upload.com/here/upload.php', {
+        method: 'POST',
+        body: formData
+    })
+        .then(res => res.text())
+        .then((url) => {
+            console.log('Got back live url:', url)
+            onSuccess(url)
+        })
+        .catch((err) => {
+            console.error(err)
+        })
+}
+
+function outFunc() {
+    var tooltip = document.querySelector(".btn-copy-url-tooltiptext")
+    tooltip.innerHTML = "Copy to clipboard"
+}
+
+// -------------------------------------------------------
+
+
+
+
 
 function renderPage() {
     drawImgOnCanvas(gAppState.selectedImgId)
@@ -139,9 +207,6 @@ function drawLine(x, y, xEnd, yEnd) {
 }
 
 
-
-
-
 function onTxtFocus() {
     // gAppState.txtPos()
     startMarkerFocus(gAppState.txtPos())
@@ -150,8 +215,6 @@ function onTxtOutFocus() {
     gIntervalFocus = clearInterval(gIntervalFocus)
     onClearText()
 }
-
-
 
 
 
