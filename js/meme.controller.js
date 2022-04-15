@@ -6,20 +6,27 @@ console.log('service is up')
 
 var gAppState = {
     isMouseDown: false,
-    selectedImgId: null,
-    savedText() {
-        return getSavedTxt()
-    },
-    txtPos() {
-        return getCuurTxtPos()
-    },
-    filColor: 'white',
+    isDrag: false,
+    currFocusedObj: null,
+    canvasWidth: null,
+    canvasHeight: null,
     strokeColor: 'black',
+    textAlign: 'center',
+    fillStyle: 'white',
+    strokeStyle: 'black',
+    font: 'Impact',
+    setFontSize: 10,
+
+    fontSize() {
+        return gElCanvas.width / this.setFontSize
+    },
     textAlign: 'center'
 }
-var gIntervalFocus
+
+var gIntervalFocusMark
 var gElCanvas
 var gCtx
+const gTouchEvs = ['touchstart', 'touchmove', 'touchend']
 
 
 function onInit() {
@@ -27,8 +34,6 @@ function onInit() {
     gCtx = gElCanvas.getContext('2d')
     addListeners()
     renderPics()
-    resizeCanvas()
-    renderCanvas()
 }
 
 // ------------page render and listeners----------------//
@@ -58,6 +63,13 @@ function resizeCanvas() {
     const elContainer = document.querySelector('.canvas-container')
     gElCanvas.width = elContainer.offsetWidth - 7
     gElCanvas.height = elContainer.offsetWidth
+
+    correctMeasures(gAppState.canvasWidth, gElCanvas.width)
+
+    gAppState.canvasWidth = gElCanvas.width
+    gAppState.canvasHeight = gElCanvas.height
+
+    renderCanvas()
 }
 
 function toggleMenu() {
@@ -86,11 +98,21 @@ function onImgClick(id) {
     renderEditDisplay()
     var images = Array.from(document.images)
     var img = images[images.findIndex(item => item.dataset.name === id)]
-    var pos = [0, 0]
-    var drawImage = gCtx.drawImage
-    setNewCanvasObj('img', drawImage, img, pos)
-    gAppState.selectedImgId = img
-    drawImgOnCanvas(img)
+    setNewCanvasObj('img', drawImg, img, 0, 0)
+    creatTextObj(gAppState.canvasHeight / 5, gAppState)
+    renderCanvas()
+}
+
+function getSize(divider) {
+    return gElCanvas.width / divider
+}
+
+function renderCanvas() {
+
+    getModel().forEach(obj => {
+        obj.method()
+    })
+
 }
 
 function renderEditDisplay() {
@@ -149,18 +171,33 @@ function outFunc() {
 
 // ---------------canvas draw && render-----------------//
 
-function drawText(txt, x, y, fil, outLine) {
-    // gCtx.beginPath()
-    // debugger
-    gCtx.lineWidth = 2.5
+function drawText() {
+    gCtx.beginPath()
+    gCtx.lineWidth = gElCanvas.height / 170
     gCtx.textBaseline = 'top'
-    gCtx.textAlign = gAppState.textAlign
-    gCtx.fillStyle = fil
-    gCtx.font = '50px Impact'
-    gCtx.fillText(txt, x, y)
-    gCtx.strokeStyle = outLine
-    gCtx.strokeText(txt, x, y)
+    gCtx.textAlign = this.textAlign
+    gCtx.fillStyle = this.fillStyle
+    gCtx.font = `${this.fontSize}px ${this.font}`
+    gCtx.fillText(this.body, this.x, this.y)
+    gCtx.strokeStyle = this.strokeStyle
+    gCtx.strokeText(this.body, this.x, this.y)
 }
+
+function drawImg() {
+    gCtx.drawImage(this.body, 0, 0, gAppState.canvasWidth, gAppState.canvasHeight)
+}
+
+// function drawText(txt, x, y, fil, outLine) {
+//     gCtx.beginPath()
+//     gCtx.lineWidth = gElCanvas.height / 170
+//     gCtx.textBaseline = 'top'
+//     gCtx.textAlign = gAppState.textAlign
+//     gCtx.fillStyle = fil
+//     gCtx.font = `${gElCanvas.height / 10}px Impact`
+//     gCtx.fillText(txt, x, y)
+//     gCtx.strokeStyle = outLine
+//     gCtx.strokeText(txt, x, y)
+// }
 
 function drawLine(x, y, xEnd, yEnd, color) {
     gCtx.beginPath()
@@ -175,12 +212,23 @@ function DrawFocusMarker(txt, pos) {
     drawLine(40, 15, 40, 100, 'green')
 }
 
+// function renderCanvas() {
+//     drawImgOnCanvas(gAppState.selectedImgId)
+//     gAppState.savedText().forEach(str => {
+//         drawText(str[0], gElCanvas.width / 2, gElCanvas.height * str[1], gAppState.filColor, gAppState.strokeColor)
+//     })
+// }
+
+// function drawImgOnCanvas(img) {
+//     if (!img) return
+//     gCtx.drawImage(img, 0, 0, gElCanvas.width, gElCanvas.height)
+// }
 function startMarkerFocus(cuurFocusPos) {
     var isDrown = false
     var color = 'black'
     var x = (gElCanvas.width / 2) + 5
     var y = gElCanvas.height * cuurFocusPos
-    gIntervalFocus = setInterval(() => {
+    gIntervalFocusMark = setInterval(() => {
         if (!isDrown) {
             color = (color === 'black') ? 'white' : 'black'
             // gCtx.strokeStyle = color
@@ -196,26 +244,42 @@ function startMarkerFocus(cuurFocusPos) {
 
 }
 
-function renderCanvas() {
-    drawImgOnCanvas(gAppState.selectedImgId)
-    gAppState.savedText().forEach(str => {
-        drawText(str[0], gElCanvas.width / 2, gElCanvas.height * str[1], gAppState.filColor, gAppState.strokeColor)
-    })
-}
-
-function drawImgOnCanvas(img) {
-    if (!img) return
-    gCtx.drawImage(img, 0, 0, gElCanvas.width, gElCanvas.height)
-}
 
 // --------------Menage MEME text-------------------//
 
+
 function onTextChange(val) {
-    var elText = getTextEL()
-    saveCuurText(elText.value, gAppState)
-    onClearText()
-    var focusTxtPos = getCuurFocus()
-    drawText(val, gElCanvas.width / 2, gElCanvas.height * focusTxtPos, gAppState.filColor, gAppState.strokeColor)
+    updateModel(gAppState.currFocusedObj, 'body', val)
+    renderCanvas()
+    // var elText = getTextEL()
+    // saveCuurText(elText.value, gAppState)
+    // onClearText()
+    // var focusTxtPos = getCuurFocus()
+    // drawText(val, gElCanvas.width / 2, gElCanvas.height * focusTxtPos, gAppState.filColor, gAppState.strokeColor)
+}
+
+function onTxtFocus() {
+
+    gAppState.currFocusedObj = setFocusObj('name', 'text')
+    // console.log('txtFocus')
+    // var elText = getTextEL()
+    // saveCuurText(elText.value)
+    // onTextChange(elText.value)
+    // startMarkerFocus(gAppState.txtPos())
+}
+
+function onTxtOutFocus() {
+    if (!gAppState.isMouseDown) gAppState.currFocusedObj = null // in case of mov from focos becos clik on canvvas that triger moovment 
+
+
+    // var elText = getTextEL()
+    // saveCuurText(elText.value)
+    // gIntervalFocusMark = clearInterval(gIntervalFocusMark)
+    // onClearText()
+}
+
+function getTextEL() {
+    return document.querySelector("input[name='meme-text']")
 }
 
 function onClearText(isClicked) {
@@ -227,6 +291,7 @@ function onClearText(isClicked) {
     renderCanvas()
 }
 
+
 function onSwitchText() {
     var elText = getTextEL()
     saveCuurText(elText.value)
@@ -236,44 +301,47 @@ function onSwitchText() {
     elText.focus()
 }
 
-function onTxtFocus() {
-    // debugger
-    var elText = getTextEL()
-    saveCuurText(elText.value)
-    onTextChange(elText.value)
-    startMarkerFocus(gAppState.txtPos())
-}
 
-function onTxtOutFocus() {
-    var elText = getTextEL()
-    saveCuurText(elText.value)
-    gIntervalFocus = clearInterval(gIntervalFocus)
-    onClearText()
-}
 
-function getTextEL() {
-    return document.querySelector("input[name='meme-text']")
-}
+
 
 // ---------detect movement and clicks on canvas----------//
 
 function onMove(ev) {
-    if (!gAppState.isMouseDown) return
+    console.log('in moov')
+    if (!gAppState.isMouseDown || !gAppState.isDrag) return
+    console.log('moov')
     const pos = getEvPos(ev)
-    const dx = pos.x - gStartPos.x
-    const dy = pos.y - gStartPos.y
-    drawShape(dx, dy)
-    gStartPos = pos
+    console.log(gAppState.currFocusedObj)
+    // debugger
+    updateModel(gAppState.currFocusedObj, 'x', pos.x)
+    updateModel(gAppState.currFocusedObj, 'y', pos.y)
+    renderCanvas()
+    // const dx = pos.x - gStartPos.x
+    // const dy = pos.y - gStartPos.y
+    // drawShape(dx, dy)
+    // gStartPos = pos
 }
 
 function onDown(ev) {
     const pos = getEvPos(ev)
-    gStartPos = pos
-    setIsMouseDown(true)
+    var objInFocusIdx = isObjClicked(pos)
+    console.log(objInFocusIdx)
+    if (objInFocusIdx >= 0) {
+        console.log('in and the ide is ', objInFocusIdx)
+        gAppState.currFocusedObj = objInFocusIdx
+        console.log(gAppState.currFocusedObj)
+        gAppState.isDrag = true
+    }
+    console.log('out of doun')
+    gAppState.isMouseDown = true
 }
 
 function onUp() {
-    setIsMouseDown(false)
+    gAppState.isMouseDown = false
+    gAppState.isDrag = false
+    console.log('up')
+
 }
 
 function getEvPos(ev) {
@@ -293,12 +361,8 @@ function getEvPos(ev) {
     return pos
 }
 
-function isTxtClick(x, y) {
-    var txtWidths = getTxtsWidth()
-    txtWidths.find(strWidth => {
-        strWidth
-    })
-
+function isObjClicked(pos) {
+    return getObjInRange(pos, gCtx)
 }
 
 
