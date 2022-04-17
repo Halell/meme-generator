@@ -5,86 +5,47 @@ var gImages = [
         id: 1,
         name: '1.jpg',
         imgSrc: `img/meme-imgs (square)/1.jpg`,
-        category: 'funny'
+        category: 'FUNNY'
     },
     {
         id: 2,
         imgSrc: `img/meme-imgs (square)/2.jpg`,
-        category: 'funny'
+        category: 'CUTE'
     },
     {
         id: 3,
         imgSrc: `img/meme-imgs (square)/3.jpg`,
-        category: 'funny'
+        category: 'SOPHISTICATED'
     },
     {
         id: 4,
         imgSrc: `img/meme-imgs (square)/4.jpg`,
-        category: 'funny'
+        category: 'WORK'
     },
     {
         id: 5,
         imgSrc: `img/meme-imgs (square)/5.jpg`,
-        category: 'funny'
+        category: 'HOME'
     },
 ]
 
+var gTags = ['work', 'home', 'sophisticate', 'cute', 'funny']
 var gModel = []
 
-var gMeme = {
-    text: {
-        textInFocus: 0,
-        strings: ['', ''],
-        positionHightDividers: [0.1, 0.8],
-        textAligns: ['', '']
-    },
-}
-// var gStartPos
 
+function getTags() {
+    return gTags
+}
 
 function getModel() {
     return gModel
-}
-
-
-
-function switchFocus() {
-    gMeme.text.textInFocus = (!gMeme.text.textInFocus) ? 1 : 0
-    var textInFocus = gMeme.text.strings[gMeme.text.textInFocus]
-    gMeme.text.strings[gMeme.text.textInFocus] = ''
-    return { textInFocus, cuurFocusPos: gMeme.text.textInFocus }
-}
-
-function saveCuurText(str, appState) {
-    gMeme.text.strings[gMeme.text.textInFocus] = str
-    gMeme.text.textAligns[gMeme.text.textInFocus] = appState.textAligns
-}
-function getCuurFocus() {
-    return gMeme.text.positionDividers[gMeme.text.textInFocus]
-}
-
-function getSavedTxt() {
-    return gMeme.text.strings.map((str, idx) => {
-        return [str, gMeme.text.positionHightDividers[idx]]
-    })
-}
-
-function getCuurTxtPos() {
-    return gMeme.text.positionDividers[gMeme.text.textInFocus]
 }
 
 function getGimages() {
     return gImages
 }
 
-
-function getTxtsWidth(ctx) {
-    return gMeme.text.strings.map(str => {
-        return Math.ceil(ctx.measureText(str))
-    })
-}
-
-function setNewCanvasObj(name, method, body, x, y, fillStyle = 'white', strokeStyle = 'black', font = 'Impact', fontSize = '50px', textAlign = 'center') {
+function setNewCanvasObj(name, method, body, x, y, fontSize, fillStyle = 'white', strokeStyle = 'black', font = 'Impact', textAlign = 'center', defaultPos = null) {
     gModel.push({
         name,
         method,
@@ -96,11 +57,12 @@ function setNewCanvasObj(name, method, body, x, y, fillStyle = 'white', strokeSt
         font,
         fontSize,
         textAlign,
-        pos(ctx) { return getObjPos(this, ctx) }
+        pos(ctx) { return getObjPos(this, ctx) },
+        defaultPos,
     })
 }
 
-function correctMeasures(LastSize, currSize) {
+function scaleMeasurements(LastSize, currSize) {
     var changePercentage = currSize / LastSize
     gModel.forEach(obj => {
         obj.x *= changePercentage
@@ -108,48 +70,73 @@ function correctMeasures(LastSize, currSize) {
         obj.fontSize *= changePercentage
     })
 }
-function getObjPos(obj, ctx) {
-    if (!obj.body) return
-    var charSize = ctx.measureText('M').width
-    var textMargin = charSize * 0.3
-    var textWidth = ctx.measureText(obj.body).width + textMargin
-    var textHeight = charSize + textMargin
 
-    var pos = {
-        startY: obj.y - textMargin,
-        endY: obj.y + textHeight
-    }
-    if (obj.textAlign !== 'center') {
-        if (obj.textAlign === 'left') {
-            pos.startX = obj.x - textMargin
-            pos.endX = obj.x + textWidth
-        } else { // textAlign = right
-            pos.startX = obj.x - textWidth
-            pos.endX = obj.x + textMargin
+function getCurrFocusObjPos(idx, ctx) {
+    return gModel[idx].pos(ctx)
+}
+
+function clearCanvas() {
+    gModel = []
+}
+
+function getObjPos(obj, ctx) {
+    if (obj.name === 'text') {
+        var charSize = ctx.measureText('M').width
+        var textMargin = charSize * 0.3
+        var textWidth = ctx.measureText(obj.body).width + textMargin
+        var textHeight = charSize + textMargin
+
+        var pos = {
+            startY: obj.y - textMargin,
+            endY: obj.y + textHeight
         }
+
+        if (!obj.body) {
+            pos.startX = obj.x
+            pos.endX = obj.x
+            return pos
+        } else {
+            if (obj.textAlign !== 'center') {
+                if (obj.textAlign === 'left') {
+                    pos.startX = obj.x - textMargin
+                    pos.endX = obj.x + textWidth
+                } else { // textAlign = right
+                    pos.startX = obj.x - textWidth
+                    pos.endX = obj.x + textMargin
+                }
+            } else {
+                pos.startX = obj.x - (textWidth / 2)
+                pos.endX = obj.x + (textWidth / 2)
+            }
+        }
+
+        return pos
     } else {
-        pos.startX = obj.x - (textWidth / 2)
-        pos.endX = obj.x + (textWidth / 2)
+        return obj.defaultPos
     }
-    return pos
+
 }
 
 function updateModel(idx, prop, val) {
     gModel[idx][prop] = val
 }
 
-function setFocusObj(prop, val, pos = null) {
-    if (!pos) {
-        return gModel.findIndex(obj => obj[prop] === val)
-    }
+function getObjBody(idx) {
+    return gModel[idx].body
 }
 
-function creatTextObj(y, appState) {
+function getModelLastIdx() {
+    return gModel.length - 1
+}
+
+function creatTextObj(height, appState) {
     var x = getPosX(appState)
-    // console.log(x)
-    setNewCanvasObj('text', drawText, '', x, y, appState.fillStyle, appState.strokeStyle, appState.font, appState.fontSize(), appState.textAlign)
+    setNewCanvasObj('text', drawText, '', x, height, appState.fontSize(), appState.fillStyle, appState.strokeStyle, appState.font, appState.textAlign)
 }
 
+function getActualPos(idxCurrInFocus) {
+    return { x: gModel[idxCurrInFocus].x, y: gModel[idxCurrInFocus].y }
+}
 
 function getPosX(appState) {
     var posX
@@ -172,4 +159,17 @@ function getObjInRange(pos, ctx) {
     isInRange = gModel.length - 1 - isInRange
     if (isInRange === gModel.length) isInRange = -1
     return isInRange
+}
+
+function isTextObj(idx) {
+    if (!gModel[idx]['name']) return false
+    return gModel[idx].name === 'text'
+}
+
+function checkIfEmpty() {
+    var emptyIdx = null
+    gModel.map((obj, idx) => {
+        if (obj.name === 'text' && !obj.body) emptyIdx = idx
+    })
+    if (emptyIdx > 0) gModel.splice(emptyIdx, 1)
 }

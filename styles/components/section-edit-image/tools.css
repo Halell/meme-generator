@@ -1,15 +1,28 @@
 .tools {
-    flex-grow: 1;
-    height: auto;
-    outline: 7px solid green;
-    margin: 7px;
+    flex-direction: column;
 }
 
+.filed-text {
+    position: absolute;
+    right: 50%;
+    z-index: -1;
+}
+
+.btn-add-text {
+    height: 100px;
+    font-size: 50px;
+}
 
 .btn-copy-url {
     position: relative;
     display: inline-block;
 }
+
+.btn-change-color {
+    height: 100px;
+    width: 100px;
+}
+
 
 .btn-copy-url .btn-copy-url-tooltiptext {
     visibility: hidden;

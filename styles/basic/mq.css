@@ -39,7 +39,7 @@
 
 @media (min-width: 660px) {
     .main-layout {
-        max-width: 600px;
+        max-width: 700px;
         margin: 0 auto;
     }
 }
@@ -47,18 +47,14 @@
 
 /* MEDIUM */
 
-@media (min-width: 920px) {
+@media (min-width: 600px) {
     .main-layout {
-        max-width: 860px;
+        max-width: 700px;
     }
 
     .images-gallery-container {
         grid-gap: 20px 20px;
         grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    }
-
-    .main-header .header-nav>*:not(:last-child) {
-        margin-inline-end: 100px;
     }
 
     .btn-menu {
@@ -74,15 +70,4 @@
         max-width: 1060px;
     }
 
-    .card-layout>*:nth-child(even) {
-        padding-inline-start: 80px;
-    }
-
-    .card-layout>*:nth-child(odd):not(:first-child) {
-        padding-inline-end: 80px;
-    }
-
-    .card-layout>* {
-        margin-bottom: 130px;
-    }
 }

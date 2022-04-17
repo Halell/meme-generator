@@ -34,10 +34,6 @@
 
             <input type="text" name="search-text" placeholder="Search keyword">
             <ul class="select-image-filter-by-word clean-list flex space-between align-center ">
-                <li><a href="#">Word</a></li>
-                <li><a href="#">Word</a></li>
-                <li><a href="#">Word</a></li>
-                <li><a href="#">Word</a></li>
             </ul>
             <button class="btn-more">← more</button>
 
@@ -58,30 +54,44 @@
         <main>
             <div class="edit-image-container flex justify-center">
                 <!-- canvas -->
-                <div class="canvas-container">
-                    <canvas width="500" height="500" style="border: 2px solid rgb(0, 0, 0);"></canvas>
+                <div class="canvas-container ">
+                    <canvas width="500" height="500"></canvas>
                 </div>
                 <!-- tools -->
-                <div class="tools">
+                <div class="tools flex">
+
                     <!-- input txt -->
-                    <input type="text" name="meme-text" oninput="onTextChange(this.value)" onfocus="onTxtFocus()"
-                        onblur="onTxtOutFocus()" autocomplete="off">
-                    <!-- clear txt -->
-                    <button onclick="onClearText(true)"> Clear-tex</button>
-                    <!-- switch txt -->
-                    <button class="btn-text-switch" onclick="onSwitchText()"> Switch</button>
+                    <input type="text" class="filed-text" name="meme-text" oninput="onTextChange(this.value)"
+                        onfocus="onTxtFocus()" onblur="onTxtOutFocus()" onkeydown="onKeyDownText(event)"
+                        autocomplete="off">
+                    <!-- add txt -->
+                    <button class="btn-add-text">+T</button>
+                    <!-- color txt -->
+                    <input class="btn-change-color" type="color" name="selected-color" oninput="onSetColor(this.value)">
+                    <!-- select font -->
+                    <select name="fonts" class="fonts" onchange="onFontChange(this.value)">
+                        <option value="Impact">Impact</option>
+                        <option value="Verdana">Verdana</option>
+                        <option value="Lucida Grande">Lucida Grande</option>
+                        <option value="Tahoma">Tahoma</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Palatino/Palatino Linotype/Book Antiqua.">
+                        </option>
+                        <option value="Andika">Andika</option>
+                    </select>
                     <!-- download img -->
                     <button class="btn-download"><a href=" #" onclick="onDownload(this)"
                             download="">Download</a></button>
+                    <!-- clear txt -->
+                    <button onclick="onClearText(true)"> Clear</button>
                     <!-- copy URL -->
                     <div class="btn-copy-url">
-                        <button onclick="onShareLink()" onmouseout="outFunc()">
+                        <button onclick="onShareLink()" onmouseout="onOutCopyBtn()">
                             <span class="btn-copy-url-tooltiptext">Copy to clipboard</span>
                             Copy URL
                         </button>
                     </div>
-                    <!-- color txt -->
-                    <input type="color" name="selected-color" onchange="onSetColor(this.value)">
+
                 </div>
             </div>
         </main>
